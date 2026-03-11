@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - Reddit Bot Manager</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #ff4500;
+            --primary-hover: #cc3700;
+            --bg: #f4f6fb;
+            --card-bg: #ffffff;
+            --text: #0f172a;
+            --text-muted: #64748b;
+            --border: rgba(15, 23, 42, 0.12);
+            --error: #dc2626;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Outfit', sans-serif; }
+
+        body {
+            min-height: 100vh;
+            background:
+                radial-gradient(circle at top left, rgba(255, 69, 0, 0.16), transparent 32%),
+                radial-gradient(circle at bottom right, rgba(14, 165, 233, 0.14), transparent 28%),
+                var(--bg);
+            color: var(--text);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 2rem;
+        }
+
+        .auth-shell {
+            width: min(980px, 100%);
+            display: grid;
+            grid-template-columns: minmax(0, 1fr) minmax(360px, 420px);
+            gap: 2rem;
+            align-items: stretch;
+        }
+
+        .auth-intro,
+        .auth-card {
+            background: var(--card-bg);
+            border: 1px solid var(--border);
+            border-radius: 28px;
+            box-shadow: 0 24px 60px rgba(15, 23, 42, 0.12);
+        }
+
+        .auth-intro {
+            padding: 2.5rem;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            gap: 2rem;
+        }
+
+        .auth-eyebrow {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            font-size: 0.78rem;
+            margin-bottom: 1rem;
+        }
+
+        .auth-intro h1 {
+            font-size: clamp(2rem, 4vw, 3rem);
+            line-height: 1.05;
+            margin-bottom: 1rem;
+        }
+
+        .auth-intro p {
+            color: var(--text-muted);
+            line-height: 1.7;
+            max-width: 50ch;
+        }
+
+        .auth-bullets {
+            display: grid;
+            gap: 0.85rem;
+        }
+
+        .auth-bullet {
+            padding: 1rem 1.1rem;
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            background: rgba(15, 23, 42, 0.03);
+            color: var(--text-muted);
+            line-height: 1.5;
+        }
+
+        .auth-card {
+            padding: 2rem;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .auth-card h2 {
+            font-size: 1.6rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .auth-card p {
+            color: var(--text-muted);
+            margin-bottom: 1.5rem;
+            line-height: 1.6;
+        }
+
+        .auth-error {
+            margin-bottom: 1rem;
+            padding: 0.9rem 1rem;
+            border-radius: 14px;
+            border: 1px solid rgba(220, 38, 38, 0.2);
+            background: rgba(220, 38, 38, 0.08);
+            color: var(--error);
+            font-size: 0.95rem;
+        }
+
+        .form-group { margin-bottom: 1rem; }
+        .form-group label { display: block; margin-bottom: 0.45rem; font-weight: 600; }
+
+        input {
+            width: 100%;
+            border: 1px solid var(--border);
+            border-radius: 14px;
+            padding: 0.9rem 1rem;
+            font-size: 0.95rem;
+            background: #ffffff;
+            color: var(--text);
+        }
+
+        input:focus {
+            outline: none;
+            border-color: rgba(255, 69, 0, 0.35);
+            box-shadow: 0 0 0 4px rgba(255, 69, 0, 0.08);
+        }
+
+        .btn {
+            width: 100%;
+            border: none;
+            border-radius: 14px;
+            padding: 0.95rem 1.1rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: background 0.2s ease, transform 0.2s ease;
+        }
+
+        .btn-primary { background: var(--primary); color: white; }
+        .btn-primary:hover { background: var(--primary-hover); transform: translateY(-1px); }
+        .btn-secondary { background: #e2e8f0; color: var(--text); margin-top: 0.85rem; }
+
+        .auth-link-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 0.75rem;
+            margin-top: 1rem;
+            font-size: 0.9rem;
+            color: var(--text-muted);
+        }
+
+        .auth-link-row a,
+        .auth-link-row button {
+            color: var(--primary);
+            background: none;
+            border: none;
+            cursor: pointer;
+            font-weight: 700;
+            padding: 0;
+            text-decoration: none;
+        }
+
+        .auth-note {
+            margin-top: 1rem;
+            font-size: 0.82rem;
+            color: var(--text-muted);
+            line-height: 1.5;
+        }
+
+        @media (max-width: 900px) {
+            .auth-shell { grid-template-columns: 1fr; }
+            .auth-intro { order: 2; }
+            .auth-card { order: 1; }
+        }
+    </style>
+</head>
+<body>
+    <div class="auth-shell">
+        <div class="auth-intro">
+            <div>
+                <div class="auth-eyebrow">Reddit Bot Manager</div>
+                <h1>{{ 'Create the first admin account' if bootstrap_mode and signup_mode else 'Sign in to continue' }}</h1>
+                <p>
+                    Review campaign approvals, manage automation, and keep the brand workflow available to trusted reviewers across your local network and Tailscale access.
+                </p>
+            </div>
+
+            <div class="auth-bullets">
+                <div class="auth-bullet">Approval workflows stay restricted to authenticated reviewers.</div>
+                <div class="auth-bullet">The first account automatically becomes the admin for the whole system.</div>
+                <div class="auth-bullet">Use the network-friendly base URL later for email review links.</div>
+            </div>
+        </div>
+
+        <div class="auth-card">
+            <h2>{{ 'Create account' if signup_mode else 'Welcome back' }}</h2>
+            <p>{{ 'Set up the first admin account to unlock the dashboard.' if signup_mode and bootstrap_mode else 'Use your username or email to access the dashboard.' }}</p>
+
+            {% if error %}
+            <div class="auth-error">{{ error }}</div>
+            {% endif %}
+
+            {% if signup_mode %}
+            <form method="post" action="/signup">
+                <input type="hidden" name="next" value="{{ next_url or '/' }}">
+                <div class="form-group">
+                    <label>Username</label>
+                    <input type="text" name="username" required>
+                </div>
+                <div class="form-group">
+                    <label>Email</label>
+                    <input type="email" name="email" required>
+                </div>
+                <div class="form-group">
+                    <label>Password</label>
+                    <input type="password" name="password" required>
+                </div>
+                <div class="form-group">
+                    <label>Confirm password</label>
+                    <input type="password" name="confirm_password" required>
+                </div>
+                <button class="btn btn-primary" type="submit">Create account</button>
+            </form>
+            {% else %}
+            <form method="post" action="/login">
+                <input type="hidden" name="next" value="{{ next_url or '/' }}">
+                <div class="form-group">
+                    <label>Username or Email</label>
+                    <input type="text" name="identity" required>
+                </div>
+                <div class="form-group">
+                    <label>Password</label>
+                    <input type="password" name="password" required>
+                </div>
+                <button class="btn btn-primary" type="submit">Sign in</button>
+            </form>
+            {% endif %}
+
+            <div class="auth-link-row">
+                {% if signup_mode %}
+                <span>Already have an account?</span>
+                <a href="/login{% if next_url %}?next={{ next_url|urlencode }}{% endif %}">Sign in</a>
+                {% elif signup_enabled %}
+                <span>Need access?</span>
+                <a href="/signup{% if next_url %}?next={{ next_url|urlencode }}{% endif %}">Create account</a>
+                {% else %}
+                <span>Sign-up is currently disabled.</span>
+                <span></span>
+                {% endif %}
+            </div>
+
+            <div class="auth-note">
+                {% if not signup_enabled and not bootstrap_mode %}
+                Ask an admin to enable sign-up or create your reviewer account.
+                {% elif bootstrap_mode %}
+                This first account will be created as an admin automatically.
+                {% else %}
+                Only authorized reviewers should have access to this app.
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</body>
+</html>
